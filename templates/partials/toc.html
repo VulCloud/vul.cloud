@@ -1,0 +1,28 @@
+{%- if page.toc -%}
+	{%- set toc = page.toc -%}
+{%- elif section.toc -%}
+	{%- set toc = section.toc -%}
+{%- endif -%}
+{%- if toc and toc | length > 0 -%}
+<aside id="toc">
+	<strong class="title">{{ macros_translate::translate(key="contents", default="Contents", language_strings=language_strings) }}</strong>
+	<div class="overshoot">
+		<ul>
+			{%- for h1 in toc -%}
+				<li>
+					<a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+					{%- if h1.children -%}
+						<ul>
+							{%- for h2 in h1.children -%}
+								<li>
+									<a href="{{ h2.permalink | safe }}">{{ h2.title }}</a>
+								</li>
+							{%- endfor -%}
+						</ul>
+					{%- endif -%}
+				</li>
+			{%- endfor -%}
+		</ul>
+	</div>
+</aside>
+{%- endif -%}

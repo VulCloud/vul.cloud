@@ -1,0 +1,25 @@
+{% macro icon(name, fill=false, inline=false) %}
+
+{%- if not name -%}
+	{{- throw(message="Icon name not specified.") -}}
+{%- endif -%}
+
+{%- if fill -%}
+	{%- set icon = load_data(path="icons/phosphor-icons/assets/fill/" ~ name ~ "-fill.svg", required=false) -%}
+	{% if not icon %}
+		{%- set icon = load_data(path="themes/ametrine/icons/phosphor-icons/assets/fill/" ~ name ~ "-fill.svg", required=false) -%}
+	{% endif %}
+{%- else -%}
+	{%- set icon = load_data(path="icons/phosphor-icons/assets/bold/" ~ name ~ "-bold.svg", required=false) -%}
+	{% if not icon %}
+		{%- set icon = load_data(path="themes/ametrine/icons/phosphor-icons/assets/bold/" ~ name ~ "-bold.svg", required=false) -%}
+	{% endif %}
+{%- endif -%}
+
+{%- if inline -%}
+	url('data:image/svg+xml,{{ icon | urlencode | safe }}');
+{%- else -%}
+	<i class="icon {{ name }}" style="--icon: url('data:image/svg+xml,{{ icon | urlencode }}');"></i>
+{%- endif -%}
+
+{% endmacro icon %}

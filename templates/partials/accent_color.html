@@ -1,0 +1,85 @@
+{# Default accent color (gray) #}
+{%- set accent_color = ["hsl(324 2% 43%)", "hsl(0 1% 75%)"] -%}
+
+{%- if page.extra.accent_color -%}
+	{%- set accent_color = page.extra.accent_color -%}
+{%- elif section.extra.accent_color -%}
+	{%- set accent_color = section.extra.accent_color -%}
+{%- elif matched_category.color -%}
+	{%- set accent_color = matched_category.color -%}
+{%- elif config.extra.accent_color -%}
+	{%- set accent_color = config.extra.accent_color -%}
+{%- endif -%}
+
+{# Check if accent color is actually a color name #}
+{%- if accent_color == "red" -%}
+	{%- set accent_color = ["hsl(342.0779 72% 58%)", "hsl(345.18988 100% 69%)"] -%}
+{%- elif accent_color == "orange" -%}
+	{%- set accent_color = ["hsl(15.771428 74% 54%)", "hsl(19.731544 96% 70%)"] -%}
+{%- elif accent_color == "yellow" -%}
+	{%- set accent_color = ["hsl(34.639175 91% 42%)", "hsl(44.70588 100% 70%)"] -%}
+{%- elif accent_color == "green" -%}
+	{%- set accent_color = ["hsl(153.7815 61% 38%)", "hsl(90 59% 66%)"] -%}
+{%- elif accent_color == "blue" -%}
+	{%- set accent_color = ["hsl(192 71% 38%)", "hsl(186.42857 71% 69%)"] -%}
+{%- elif accent_color == "purple" -%}
+	{%- set accent_color = ["hsl(254.11766 44% 55%)", "hsl(249.88234 77% 78%)"] -%}
+{%- endif -%}
+
+{%- if accent_color is iterable -%}
+	{%- set accent_color_light = accent_color[0] -%}
+	{%- set accent_color_dark = accent_color[1] -%}
+{%- else -%}
+	{%- set accent_color_light = accent_color -%}
+	{%- set accent_color_dark = accent_color -%}
+{%- endif -%}
+
+{# Throw error if accent color is not in HSL #}
+{%- if accent_color_light is starting_with("#") -%}
+	{{- throw(message="Light accent color seems to use hex color code instead of HSL: " ~ accent_color_light) -}}
+{%- endif -%}
+
+{%- if accent_color_dark is starting_with("#") -%}
+	{{- throw(message="Dark accent color seems to use hex color code instead of HSL: " ~ accent_color_dark) -}}
+{%- endif -%}
+
+{%- if accent_color_light is starting_with("rgb") -%}
+	{{- throw(message="Light accent color seems to use RGB color instead of HSL: " ~ accent_color_light) -}}
+{%- endif -%}
+
+{%- if accent_color_dark is starting_with("rgb") -%}
+	{{- throw(message="Dark accent color seems to use RGB color instead of HSL: " ~ accent_color_dark) -}}
+{%- endif -%}
+
+{# Throw error if dark accent color is set using legacy method #}
+{%- if page.extra.accent_color_dark -%}
+	{%- set legacy_accent_color_dark = true -%}
+{%- elif section.extra.accent_color_dark -%}
+	{%- set legacy_accent_color_dark = true -%}
+{%- elif config.extra.accent_color_dark -%}
+	{%- set legacy_accent_color_dark = true -%}
+{%- endif -%}
+
+{%- if legacy_accent_color_dark -%}
+	{{- throw(message='Dark accent color seems to be set using legacy method: accent_color_dark = "#000000". Please convert it to the new syntax: accent_color = ["hsl(360 100% 100%)", "hsl(0 0% 0%)"].') -}}
+{%- endif -%}
+
+{%- if accent_color_light is matching(", ") -%}
+	{%- set accent_array_light = accent_color_light | trim_start_matches(pat="hsl(") | trim_end_matches(pat=")") | split(pat=", ") -%}
+{%- else -%}
+	{%- set accent_array_light = accent_color_light | trim_start_matches(pat="hsl(") | trim_end_matches(pat=")") | split(pat=" ") -%}
+{%- endif -%}
+
+{%- if accent_color_dark is matching(", ") -%}
+	{%- set accent_array_dark = accent_color_dark | trim_start_matches(pat="hsl(") | trim_end_matches(pat=")") | split(pat=", ") -%}
+{%- else -%}
+	{%- set accent_array_dark = accent_color_dark | trim_start_matches(pat="hsl(") | trim_end_matches(pat=")") | split(pat=" ") -%}
+{%- endif -%}
+
+--accent-light-h: {{ accent_array_light[0] | safe }};
+--accent-light-s: {{ accent_array_light[1] | safe }};
+--accent-light-l: {{ accent_array_light[2] | safe }};
+
+--accent-dark-h: {{ accent_array_dark[0] | safe }};
+--accent-dark-s: {{ accent_array_dark[1] | safe }};
+--accent-dark-l: {{ accent_array_dark[2] | safe }};
