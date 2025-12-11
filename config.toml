@@ -58,7 +58,7 @@ title = "Vul: Agentic Patching"
 description = "Agentic Patching, AI-native Security"
 
  generate_feeds = true
-
+feed_filenames = ["atom.xml", "rss.xml"]
  build_search_index = false
 
  taxonomies = [
@@ -77,7 +77,7 @@ title = "Vul: Agentic Patching"
 description = "Agentic Patching, AI-native Security"
 
  generate_feeds = true
-
+feed_filenames = ["atom.xml", "rss.xml"]
  build_search_index = false
 
  taxonomies = [
